@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar usuario</title>
+</head>
+<body>
+    <h1>Insertar usuario</h1>
+    <form id="usuarioForm">
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="password" id="contraseña" placeholder="Contraseña" required>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        // Función para cargar usuarios guardados al iniciar la aplicación
+        function cargarUsuarios() {
+            const usuariosGuardados = localStorage.getItem('usuarios');
+            if (usuariosGuardados) {
+                usuarios = JSON.parse(usuariosGuardados);
+            }
+        }
+
+        // Arreglo para almacenar los usuarios
+        let usuarios = [];
+
+        // Función para guardar un usuario
+        function guardarUsuario(usuario) {
+            usuarios.push(usuario);
+            mostrarResultado(`Usuario ${usuario.nombre} guardado correctamente.`);
+            
+            // Guardar los usuarios en localStorage
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        }
+
+        // Event listener para el formulario
+        document.getElementById('usuarioForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtenemos los valores de los inputs
+            const nombre = document.getElementById('nombre').value;
+            const contraseña = document.getElementById('contraseña').value;
+
+            // Creamos un objeto usuario
+            const usuario = { nombre, contraseña };
+
+            // Guardamos el usuario
+            guardarUsuario(usuario);
+
+            // Reiniciamos los campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('contraseña').value = '';
+
+            // Mostramos el resultado
+            mostrarResultado('Datos guardados correctamente.');
+        });
+
+        // Función para mostrar resultados en la pantalla
+        function mostrarResultado(mensaje) {
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = mensaje + '<br><hr>' + JSON.stringify(usuarios, null, 2);
+        }
+
+        // Cargar usuarios al iniciar la aplicación
+        cargarUsuarios();
+    </script>
+</body>
+</html>
